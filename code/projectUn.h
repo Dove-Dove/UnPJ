@@ -94,10 +94,13 @@ private:
 
 	int currentBulletIndex;
 	int currentUintIndex;
+	int currentMonsterBulletIndex;
 
 
 	//총알 (오브젝트 풀링)을 위한 백터
 	std::vector<cocos2d::Sprite*>vBullet;
+
+	std::vector<cocos2d::Sprite*>monsterVBullet;
 
 	//유저 관련
 	//총알 생성
@@ -159,7 +162,10 @@ private:
 	//일반 움직임
 	void monsterMove();
 	void monsterAttack();
-	void monsterColision();
+	void monsterColision(float dt);
+	//몬스터 관련 발사
+	void monstrCreateBullet();
+	void monsterFire(int x, int y);
 
 	///몬스터 스폰
 	void monsterSpawnPoint(float x, float y, float time);

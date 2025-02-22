@@ -27,15 +27,16 @@ bool projectUn::init()
     // 카메라와 연결
     userSprite->setCameraMask((unsigned short)CameraFlag::USER1);
 
-    CreateSpadeMan(100, 200);
-    CreateSpadeMan(100, 200);
-    CreateSpadeMan(100, 200);
-    //createMonster( 850,400);
+    //CreateSpadeMan(100, 200);
+    //CreateSpadeMan(100, 200);
+    //CreateSpadeMan(100, 200);
+    createMonster( 850,223);
     //createMonster(750, 400);
     //createMonster(900, 350);
     //createMonster(1000, 350);
     //총알 생성
     createUserAmmo();
+    monstrCreateBullet();
 
     GroundSprite = Sprite::create("New/BackGround/Ground.png");
     GroundSprite->setPosition(Vec2(200, 97));
@@ -145,12 +146,14 @@ void projectUn::update(float dt)
 
     //몬스터 관련
     {
+        /*
+        //몬스터 공격 함수 인데..너무 난잡하고 복잡해서 새로 고치기
         for (int i = 0; i < monsterUnits.size(); i++)
         {
             //거리
             if ((monsterUnits[i].sprite->getPositionX() - wellSprite->getPositionX()) <= 50
                 && (monsterUnits[i].nextAc == false && monsterUnits[i].state == 1)
-               && !breakWell)
+                && !breakWell)
             {
                 monsterUnits[i].nextAc = true;
                 monsterUnits[i].state = 2;
@@ -163,26 +166,26 @@ void projectUn::update(float dt)
                 monsterUnits[i].state = 1;
             }
 
-            else
-            {
-                for (int j = 0; j < playerUnits.size(); j++)
-                {
-                    if (monsterUnits[i].sprite->getPositionX() - spadeManEx[i].sprtie->getPositionX() <= 50 &&
-                        (monsterUnits[i].nextAc == false && monsterUnits[i].state == 1))
-                    {
-                        monsterUnits[i].nextAc = true;
-                        monsterUnits[i].state = 2;
-                        monsterUnits[i].unitAttack = true;
-                    }
-                    else if (monsterUnits[i].sprite->getPositionX() - spadeManEx[i].sprtie->getPositionX() <= 50 &&
-                        (monsterUnits[i].nextAc == false && monsterUnits[i].state == 2))
-                    {
-                        monsterUnits[i].nextAc = true;
-                        monsterUnits[i].state = 1;
-                        monsterUnits[i].unitAttack = false;
-                    }
-                }
-            }
+            //else
+            //{
+            //    for (int j = 0; j < playerUnits.size(); j++)
+            //    {
+            //        if (monsterUnits[i].sprite->getPositionX() - spadeManEx[i].sprtie->getPositionX() <= 50 &&
+            //            (monsterUnits[i].nextAc == false && monsterUnits[i].state == 1))
+            //        {
+            //            monsterUnits[i].nextAc = true;
+            //            monsterUnits[i].state = 2;
+            //            monsterUnits[i].unitAttack = true;
+            //        }
+            //        else if (monsterUnits[i].sprite->getPositionX() - spadeManEx[i].sprtie->getPositionX() <= 50 &&
+            //            (monsterUnits[i].nextAc == false && monsterUnits[i].state == 2))
+            //        {
+            //            monsterUnits[i].nextAc = true;
+            //            monsterUnits[i].state = 1;
+            //            monsterUnits[i].unitAttack = false;
+            //        }
+            //    }
+            //}
 
             //-----
             //("Monster %d: state=%d, nextAc=%s", i, monsterUnits[i].state, monsterUnits[i].nextAc ? "true" : "false");
@@ -195,7 +198,7 @@ void projectUn::update(float dt)
                 monsterUnits[i].nextAc = false;
                 monsterMoveAnim();
             }
-            else if(monsterUnits[i].nextAc == true && monsterUnits[i].state == 2)
+            else if (monsterUnits[i].nextAc == true && monsterUnits[i].state == 2)
             {
                 monsterUnits[i].nextAc = false;
                 monsterUnits[i].AttackTime += dt;
@@ -204,21 +207,98 @@ void projectUn::update(float dt)
             }
 
 
+            //state 가 2라면 (공격) -hp
             if (monsterUnits[i].state == 2)
             {
                 monsterUnits[i].AttackTime += dt;
                 if (monsterUnits[i].AttackTime >= 1.0f)
                 {
                     monsterUnits[i].AttackTime = 0;
-                    wellHit();
+                    wellHit();                
+                }
+            }
+
+        }
+        */
+
+        //몬스터 공격 함수 인데..너무 난잡하고 복잡해서 새로 고치기
+        for (int i = 0; i < monsterUnits.size(); i++)
+        {
+            //거리
+            if ((monsterUnits[i].sprite->getPositionX() - wellSprite->getPositionX()) <= 50
+                && (monsterUnits[i].nextAc == false && monsterUnits[i].state == 1)
+                && !breakWell)
+            {
+                monsterUnits[i].nextAc = true;
+                monsterUnits[i].state = 2;
+            }
+            else if ((monsterUnits[i].sprite->getPositionX() - wellSprite->getPositionX()) >= 50
+                && (monsterUnits[i].nextAc == false && monsterUnits[i].state == 2)
+                && breakWell)
+            {
+                monsterUnits[i].nextAc = true;
+                monsterUnits[i].state = 1;
+            }
+
+            //else
+            //{
+            //    for (int j = 0; j < playerUnits.size(); j++)
+            //    {
+            //        if (monsterUnits[i].sprite->getPositionX() - spadeManEx[i].sprtie->getPositionX() <= 50 &&
+            //            (monsterUnits[i].nextAc == false && monsterUnits[i].state == 1))
+            //        {
+            //            monsterUnits[i].nextAc = true;
+            //            monsterUnits[i].state = 2;
+            //            monsterUnits[i].unitAttack = true;
+            //        }
+            //        else if (monsterUnits[i].sprite->getPositionX() - spadeManEx[i].sprtie->getPositionX() <= 50 &&
+            //            (monsterUnits[i].nextAc == false && monsterUnits[i].state == 2))
+            //        {
+            //            monsterUnits[i].nextAc = true;
+            //            monsterUnits[i].state = 1;
+            //            monsterUnits[i].unitAttack = false;
+            //        }
+            //    }
+            //}
+
+            //-----
+            //("Monster %d: state=%d, nextAc=%s", i, monsterUnits[i].state, monsterUnits[i].nextAc ? "true" : "false");
+            if (monsterUnits[i].nextAc == true && monsterUnits[i].state == 1)
+            {
+
+                //todo----------------------움직임 관련임
+                //CCLOG("들어감");
+                monsterUnits[i].state = 1;
+                monsterUnits[i].nextAc = false;
+                monsterMoveAnim();
+            }
+            else if (monsterUnits[i].nextAc == true && monsterUnits[i].state == 2)
+            {
+                monsterUnits[i].nextAc = false;
+                monsterUnits[i].AttackTime += dt;
+                monsterAttack();
+
+            }
+
+
+            //state 가 2라면 (공격) -hp
+            if (monsterUnits[i].state == 2)
+            {
+                monsterUnits[i].AttackTime += dt;
+                if (monsterUnits[i].AttackTime >= 1.0f)
+                {
+                    monsterUnits[i].AttackTime = 0;
+                    monsterFire(monsterUnits[i].sprite->getPositionX(), monsterUnits[i].sprite->getPositionY());
+                    //wellHit();
                 }
             }
 
         }
 
+    }
        
 
-    }
+
     //몬스터 움직이는 함수
     monsterMove();
 }
@@ -849,11 +929,67 @@ void projectUn::monsterAttack()
     }
 }
 
-void projectUn::monsterColision()
+void projectUn::monstrCreateBullet()
 {
-    
+    for (int i = 0; i < 100; i++)
+    {
+        auto bullet = Sprite::create("New/object/gunAmmo.png");
+        // 처음엔 화면 밖에 위치
+        bullet->setPosition(Vec2(-100, -100));
+        //생성후 화면 밖으로 생성
+        bullet->runAction(Hide::create());
+        this->addChild(bullet);
+
+        //배열로 넣기
+        monsterVBullet.push_back(bullet);
+
+        bullet->setCameraMask((unsigned short)CameraFlag::USER1);
+    }
+}
+
+void projectUn::monsterFire(int x, int y)
+{
+    auto bullet = monsterVBullet.at(currentMonsterBulletIndex);
+
+    bullet->setPosition(x, y);
+
+    //Todo 날아가는지 확인 후 변경
+    auto forward = MoveTo::create(2.0f, Vec2(x - 100, y));
+
+    auto seq = Sequence::create(
+        Show::create(),
+        forward,
+        nullptr);
+    bullet->runAction(seq);
+    // 인덱스 순환 (배열 끝에 도달하면 처음으로 돌아감)
+    currentMonsterBulletIndex = (currentMonsterBulletIndex + 1) % monsterVBullet.size();
+
+    this->schedule(schedule_selector(projectUn::monsterColision));
+}
+
+void projectUn::monsterColision(float dt)
+{
+    for (auto bulletIt = monsterVBullet.begin(); bulletIt != monsterVBullet.end(); )
+    {
+        auto bullet = *bulletIt;
+        
+        if (bullet->getBoundingBox().intersectsRect(wellSprite->getBoundingBox()))
+        {
+            bullet->stopAllActions();
+            bullet->setPosition(-100, -100);
+            bullet->runAction(Hide::create());
+            wellHit();
+        }
+
+        else
+        {
+            ++bulletIt;
+        }
+    }
 
 }
+
+
 
 void projectUn::monsterSpawnPoint(float x, float y, float time)
 {
