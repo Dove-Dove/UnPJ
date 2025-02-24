@@ -8,6 +8,7 @@ struct MonsterUnit
 	int state;  // 0: Idle, 1: Move, 2: Attack
 	float AttackTime = 0.0f;
 	bool unitAttack = false;
+	bool monsterAttack = false;
 	int monsterHp = 5;
 };
 
@@ -128,7 +129,7 @@ private:
 
 	// 아군 유닛----------------
 	//벽 체력 관련
-	int wellHp = 3;
+	int wellHp = 5;
 	float wellBuildTime = 0.0f;
 	int wellCount = 0;
 	//벽 사용 가능한지에 관한것
@@ -165,7 +166,7 @@ private:
 	void monsterColision(float dt);
 	//몬스터 관련 발사
 	void monstrCreateBullet();
-	void monsterFire(int x, int y);
+	void monsterFire(int x, int y, MonsterUnit monster);
 
 	///몬스터 스폰
 	void monsterSpawnPoint(float x, float y, float time);

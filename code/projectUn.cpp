@@ -43,11 +43,13 @@ bool projectUn::init()
     GroundSprite->setCameraMask((unsigned short)CameraFlag::USER1);
     this->addChild(GroundSprite);
 
-    wellSprite = Sprite::create("New/Well/tex_tower1_5.png");
+    wellSprite = Sprite::create("New/Well/tex_tower1_1.png");
     wellSprite -> setPosition(Vec2(600, 223));
     wellSprite ->setCameraMask((unsigned short)CameraFlag::USER1);
+    wellSprite->setFlippedX(true);
     this->addChild(wellSprite);
 
+    log("%d", wellHp);
 
 
     this->scheduleUpdate();
@@ -132,17 +134,19 @@ void projectUn::update(float dt)
 
     {
         // 기타 유닛 관련 (수리)
-        if (wellHp < 4)
-        {
-            //spadeManBuild();
-            wellBuildTime += dt;
-            if (wellBuildTime > 3.0f)
-                wellHp++;
+        //if (wellHp < 4)
+        // 
+        //{
+        //    spadeManBuild();
+        //    wellBuildTime += dt;
+        //    if (wellBuildTime > 3.0f)
+        //        wellHp++;
 
-            if (wellHp >= 4)
-                spadeManIdle();
-        }
+        //    if (wellHp >= 4)
+        //        spadeManIdle();
+        //}
     }
+
 
     //몬스터 관련
     {
@@ -288,8 +292,8 @@ void projectUn::update(float dt)
                 if (monsterUnits[i].AttackTime >= 1.0f)
                 {
                     monsterUnits[i].AttackTime = 0;
-                    monsterFire(monsterUnits[i].sprite->getPositionX(), monsterUnits[i].sprite->getPositionY());
-                    //wellHit();
+                    monsterFire(monsterUnits[i].sprite->getPositionX(), monsterUnits[i].sprite->getPositionY()
+                    , monsterUnits[i]);
                 }
             }
 
@@ -742,7 +746,6 @@ void projectUn::spadeManBuild()
 void projectUn::CreateSpadeMan(float x, float y)
 {
     spadeManSprite = Sprite::create("New/spadeMan/spadeManMain.png");
-    //spadeManIdle();
     int unitState = 0;
 
     spadeManSprite->setPosition(Vec2(x, y));
@@ -764,7 +767,7 @@ void projectUn::CreateSpadeMan(float x, float y)
 
 void projectUn::wellTypeImg(int imgNum)
 {
-    switch (wellHp)
+    switch (imgNum)
     {
     case 5:
         wellSprite->setTexture("New/Well/tex_tower1_1.png");
@@ -778,15 +781,25 @@ void projectUn::wellTypeImg(int imgNum)
     case 2:
         wellSprite->setTexture("New/Well/tex_tower1_4.png");
         break;
-    default:
+    case 1:
         wellSprite->setTexture("New/Well/tex_tower1_5.png");
         break;
     }
+
+
+    if (imgNum <= 1)
+        breakWell = true;
+    else
+        breakWell = false;
+
 }
 
 void projectUn::wellHit()
 {
+    //왜 0?으로 뜨지?
+    log("%d", wellHp);
     wellHp--;
+    log("%d", wellHp);
     wellTypeImg(wellHp);
     //if (wellHp <= 0)
     //{
@@ -866,6 +879,9 @@ void projectUn::monsterMoveAnim()
         auto animate = Animate::create(animation);
         auto rep = RepeatForever::create(animate);
 
+        monsterUnits[i].sprite->setFlippedX(true);
+
+
         monsterUnits[i].sprite->runAction(rep);
 
         
@@ -896,7 +912,6 @@ void projectUn::monsterAttack()
     {
         if (monsterUnits[i].state != 2)
         {
-            //CCLOG("현재 상태 Move");
             continue;
         }
 
@@ -913,8 +928,6 @@ void projectUn::monsterAttack()
 
             SpriteFrame* frame = cache->getSpriteFrameByName(_frames);
 
-
-
             //선별한 SpriteFrame을 삽입
             animFrames.pushBack(frame);
         }
@@ -924,6 +937,8 @@ void projectUn::monsterAttack()
         auto animation = Animation::createWithSpriteFrames(animFrames, 0.13f);
         auto animate = Animate::create(animation);
         auto rep = RepeatForever::create(animate);
+
+        monsterUnits[i].sprite->setFlippedX(true);
 
         monsterUnits[i].sprite->runAction(rep);
     }
@@ -947,8 +962,9 @@ void projectUn::monstrCreateBullet()
     }
 }
 
-void projectUn::monsterFire(int x, int y)
+void projectUn::monsterFire(int x, int y, MonsterUnit monster)
 {
+
     auto bullet = monsterVBullet.at(currentMonsterBulletIndex);
 
     bullet->setPosition(x, y);
@@ -976,9 +992,10 @@ void projectUn::monsterColision(float dt)
         if (bullet->getBoundingBox().intersectsRect(wellSprite->getBoundingBox()))
         {
             bullet->stopAllActions();
+            wellHit();
             bullet->setPosition(-100, -100);
             bullet->runAction(Hide::create());
-            wellHit();
+  
         }
 
         else
