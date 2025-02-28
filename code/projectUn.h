@@ -17,7 +17,7 @@ struct SpadeManUnit
 	cocos2d::Sprite* sprtie;
 	//현제 유닛의 순번
 	int state = 0; 
-	//유닛 상태 0:idle(따라다님)  1:move(따라다님)  3:idle(벽 배치) 4:move(벽 배치) 5.공격 6 빌드
+	//유닛 상태 0:idle(따라다님)  1:move(따라다님)  3:idle(벽 배치) 4:move(벽 배치) 5.공격 6 빌드 7 아무것도 아닌 상태
 	bool wellBack = false;
 	float attackTime = 0.0f;
 	bool unitLeft = true;

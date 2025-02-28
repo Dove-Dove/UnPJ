@@ -29,7 +29,7 @@ bool projectUn::init()
 
     //CreateSpadeMan(100, 200);
     //CreateSpadeMan(100, 200);
-    //CreateSpadeMan(100, 200);
+    CreateSpadeMan(100, 223);
     createMonster( 850,223);
     //createMonster(750, 400);
     //createMonster(900, 350);
@@ -105,6 +105,7 @@ void projectUn::update(float dt)
             {
                 for (int i = 0; i < spadeManEx.size(); i++)
                 {
+                  
                     if (spadeManEx[i].state == 0 || spadeManEx[i].state == 1)
                         unitMove();
                         
@@ -150,8 +151,8 @@ void projectUn::update(float dt)
 
     //몬스터 관련
     {
-        /*
-        //몬스터 공격 함수 인데..너무 난잡하고 복잡해서 새로 고치기
+
+
         for (int i = 0; i < monsterUnits.size(); i++)
         {
             //거리
@@ -170,103 +171,20 @@ void projectUn::update(float dt)
                 monsterUnits[i].state = 1;
             }
 
-            //else
-            //{
-            //    for (int j = 0; j < playerUnits.size(); j++)
-            //    {
-            //        if (monsterUnits[i].sprite->getPositionX() - spadeManEx[i].sprtie->getPositionX() <= 50 &&
-            //            (monsterUnits[i].nextAc == false && monsterUnits[i].state == 1))
-            //        {
-            //            monsterUnits[i].nextAc = true;
-            //            monsterUnits[i].state = 2;
-            //            monsterUnits[i].unitAttack = true;
-            //        }
-            //        else if (monsterUnits[i].sprite->getPositionX() - spadeManEx[i].sprtie->getPositionX() <= 50 &&
-            //            (monsterUnits[i].nextAc == false && monsterUnits[i].state == 2))
-            //        {
-            //            monsterUnits[i].nextAc = true;
-            //            monsterUnits[i].state = 1;
-            //            monsterUnits[i].unitAttack = false;
-            //        }
-            //    }
-            //}
-
-            //-----
-            //("Monster %d: state=%d, nextAc=%s", i, monsterUnits[i].state, monsterUnits[i].nextAc ? "true" : "false");
-            if (monsterUnits[i].nextAc == true && monsterUnits[i].state == 1)
+            else 
             {
-
-                //todo----------------------움직임 관련임
-                //CCLOG("들어감");
-                monsterUnits[i].state = 1;
-                monsterUnits[i].nextAc = false;
-                monsterMoveAnim();
-            }
-            else if (monsterUnits[i].nextAc == true && monsterUnits[i].state == 2)
-            {
-                monsterUnits[i].nextAc = false;
-                monsterUnits[i].AttackTime += dt;
-                monsterAttack();
-
-            }
-
-
-            //state 가 2라면 (공격) -hp
-            if (monsterUnits[i].state == 2)
-            {
-                monsterUnits[i].AttackTime += dt;
-                if (monsterUnits[i].AttackTime >= 1.0f)
+                for (int j = 0; j < spadeManEx.size(); j++)
                 {
-                    monsterUnits[i].AttackTime = 0;
-                    wellHit();                
+                    if (monsterUnits[i].sprite->getPositionX() - spadeManEx[j].sprtie->getPositionX() <= 50 &&
+                        (monsterUnits[i].nextAc == false && monsterUnits[j].state == 1))
+                    {
+                        monsterUnits[i].nextAc = true;
+                        monsterUnits[i].state = 2;
+                        //monsterUnits[i].unitAttack = true;
+                    }
                 }
             }
 
-        }
-        */
-
-        //몬스터 공격 함수 인데..너무 난잡하고 복잡해서 새로 고치기
-        for (int i = 0; i < monsterUnits.size(); i++)
-        {
-            //거리
-            if ((monsterUnits[i].sprite->getPositionX() - wellSprite->getPositionX()) <= 50
-                && (monsterUnits[i].nextAc == false && monsterUnits[i].state == 1)
-                && !breakWell)
-            {
-                monsterUnits[i].nextAc = true;
-                monsterUnits[i].state = 2;
-            }
-            else if ((monsterUnits[i].sprite->getPositionX() - wellSprite->getPositionX()) >= 50
-                && (monsterUnits[i].nextAc == false && monsterUnits[i].state == 2)
-                && breakWell)
-            {
-                monsterUnits[i].nextAc = true;
-                monsterUnits[i].state = 1;
-            }
-
-            //else
-            //{
-            //    for (int j = 0; j < playerUnits.size(); j++)
-            //    {
-            //        if (monsterUnits[i].sprite->getPositionX() - spadeManEx[i].sprtie->getPositionX() <= 50 &&
-            //            (monsterUnits[i].nextAc == false && monsterUnits[i].state == 1))
-            //        {
-            //            monsterUnits[i].nextAc = true;
-            //            monsterUnits[i].state = 2;
-            //            monsterUnits[i].unitAttack = true;
-            //        }
-            //        else if (monsterUnits[i].sprite->getPositionX() - spadeManEx[i].sprtie->getPositionX() <= 50 &&
-            //            (monsterUnits[i].nextAc == false && monsterUnits[i].state == 2))
-            //        {
-            //            monsterUnits[i].nextAc = true;
-            //            monsterUnits[i].state = 1;
-            //            monsterUnits[i].unitAttack = false;
-            //        }
-            //    }
-            //}
-
-            //-----
-            //("Monster %d: state=%d, nextAc=%s", i, monsterUnits[i].state, monsterUnits[i].nextAc ? "true" : "false");
             if (monsterUnits[i].nextAc == true && monsterUnits[i].state == 1)
             {
 
@@ -318,7 +236,6 @@ void projectUn::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::E
             Moveing = true;
             _keyCodeX |= 1;
             USpaceM = -35;
-
             break;
         case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
             userLeft = false;
@@ -629,10 +546,14 @@ void projectUn::spadeManIdle()
         auto rep = RepeatForever::create(animate);
 
         //플레이어가 바라보는 방향에 따라서 애니메이션 플립
-        spadeManEx[i].sprtie->setFlippedX(userLeft);
+        if (!(spadeManEx[i].state == 7))
+        {
+            spadeManEx[i].state = 0;
+            spadeManEx[i].sprtie->setFlippedX(userLeft);
+        }
 
         spadeManEx[i].sprtie->runAction(rep);
-        spadeManEx[i].state = 0;
+ 
 
     }
 
@@ -643,7 +564,7 @@ void projectUn::spadeManMove()
 
     for (int i = 0; i < spadeManEx.size(); i++)
     {
-        if (spadeManEx[i].state == 1 || spadeManEx[i].state == 4)
+        if (spadeManEx[i].state == 1 || spadeManEx[i].state == 4 || spadeManEx[i].state == 7)
             continue;
 
         spadeManEx[i].sprtie->stopAllActions();
@@ -746,15 +667,13 @@ void projectUn::spadeManBuild()
 void projectUn::CreateSpadeMan(float x, float y)
 {
     spadeManSprite = Sprite::create("New/spadeMan/spadeManMain.png");
-    int unitState = 0;
+    int unitState = 7;
 
     spadeManSprite->setPosition(Vec2(x, y));
 
     spadeManSprite->setScale(1.0f);
     this->addChild(spadeManSprite);
 
-    //배열에 추가
-    //playerUnits.push_back(spadeManSprite);
 
     spadeManSprite->setCameraMask((unsigned short)CameraFlag::USER1);
 
@@ -796,24 +715,15 @@ void projectUn::wellTypeImg(int imgNum)
 
 void projectUn::wellHit()
 {
-    //왜 0?으로 뜨지?
-    log("%d", wellHp);
     wellHp--;
-    log("%d", wellHp);
     wellTypeImg(wellHp);
-    //if (wellHp <= 0)
-    //{
-    //    wellSprite->stopAllActions();
-    //    breakWell = true;
-    //    wellSprite->runAction(Hide::create());
-    //}
 }
 
 void projectUn::unitMove()
 {
     for (int i = 0; i < spadeManEx.size(); i++)
     {
-        if (spadeManEx[i].state == 0 || spadeManEx[i].state == 3)
+        if (spadeManEx[i].state == 0 || spadeManEx[i].state == 3 || spadeManEx[i].state == 7)
             continue;
         auto UnitX = userSprite->getPositionX() - (USpaceM * (i+1) );
 
